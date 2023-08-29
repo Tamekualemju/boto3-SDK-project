@@ -1,0 +1,27 @@
+import boto3
+
+# Below is the EC2 Client
+client = boto3.client('ec2')
+
+# Below method gets all the regions
+regions = client.describe_regions()
+
+# Below variable is created to store all the regions
+allregions =[]
+
+# Below for loop updates the regions to the variable "allregions"
+for i in regions["Regions"]:
+    allregions.append(i["RegionName"])
+
+# Below loop gives you all instances from all the regions
+for j in allregions:
+    client = boto3.client('ec2',region_name= j)
+    
+    print("region",j)
+
+    response = client.describe_instances()
+
+    if "InstanceId" in str(response["Reservations"]):
+
+        for j in response["Reservations"]:
+            print(j["Instances"][0]["InstanceId"])
